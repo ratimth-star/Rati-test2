@@ -40,7 +40,14 @@
       <section class="measure-list">
         <article class="card">
           <div class="item-header"><span class="badge">1</span><h2>อัตราการหายใจ (ครั้ง/นาที)</h2></div>
-          <select id="respiratoryRate"></select>
+          <select id="respiratoryRate">
+            <option value="">-- เลือก --</option>
+            <option value="3">≤8 (3)</option>
+            <option value="1">9–11 (1)</option>
+            <option value="0">12–20 (0)</option>
+            <option value="2">21–24 (2)</option>
+            <option value="3">≥25 (3)</option>
+          </select>
         </article>
 
         <article class="card">
@@ -49,32 +56,68 @@
             <label><input type="radio" name="spo2Scale" value="1" checked /> Scale 1</label>
             <label><input type="radio" name="spo2Scale" value="2" /> Scale 2</label>
           </div>
-          <select id="spo2"></select>
+          <select id="spo2">
+            <option value="">-- เลือก --</option>
+            <option value="3">≤91 (3)</option>
+            <option value="2">92–93 (2)</option>
+            <option value="1">94–95 (1)</option>
+            <option value="0">≥96 (0)</option>
+          </select>
         </article>
 
         <article class="card">
           <div class="item-header"><span class="badge">3</span><h2>การใช้ออกซิเจนเสริม</h2></div>
-          <select id="oxygenSupport"></select>
+          <select id="oxygenSupport">
+            <option value="">-- เลือก --</option>
+            <option value="0">ไม่ใช้ (0)</option>
+            <option value="2">ใช้ออกซิเจนเสริม (2)</option>
+          </select>
         </article>
 
         <article class="card">
           <div class="item-header"><span class="badge">4</span><h2>อุณหภูมิ</h2></div>
-          <select id="temperature"></select>
+          <select id="temperature">
+            <option value="">-- เลือก --</option>
+            <option value="3">≤35.0 (3)</option>
+            <option value="1">35.1–36.0 (1)</option>
+            <option value="0">36.1–38.0 (0)</option>
+            <option value="1">38.1–39.0 (1)</option>
+            <option value="2">≥39.1 (2)</option>
+          </select>
         </article>
 
         <article class="card">
           <div class="item-header"><span class="badge">5</span><h2>ความดันโลหิตซิสโตลิก (มม.ปรอท)</h2></div>
-          <select id="systolicBP"></select>
+          <select id="systolicBP">
+            <option value="">-- เลือก --</option>
+            <option value="3">≤90 (3)</option>
+            <option value="2">91–100 (2)</option>
+            <option value="1">101–110 (1)</option>
+            <option value="0">111–219 (0)</option>
+            <option value="3">≥220 (3)</option>
+          </select>
         </article>
 
         <article class="card">
           <div class="item-header"><span class="badge">6</span><h2>อัตราการเต้นของหัวใจ (ครั้ง/นาที)</h2></div>
-          <select id="heartRate"></select>
+          <select id="heartRate">
+            <option value="">-- เลือก --</option>
+            <option value="3">≤40 (3)</option>
+            <option value="1">41–50 (1)</option>
+            <option value="0">51–90 (0)</option>
+            <option value="1">91–110 (1)</option>
+            <option value="2">111–130 (2)</option>
+            <option value="3">≥131 (3)</option>
+          </select>
         </article>
 
         <article class="card">
           <div class="item-header"><span class="badge">7</span><h2>ระดับความรู้สึกตัว (AVPU)</h2></div>
-          <select id="consciousness"></select>
+          <select id="consciousness">
+            <option value="">-- เลือก --</option>
+            <option value="0">A - Alert (0)</option>
+            <option value="3">V/P/U (3)</option>
+          </select>
         </article>
       </section>
 
