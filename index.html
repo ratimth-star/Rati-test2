@@ -3,120 +3,131 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SUANDOK NEWS</title>
-
-  <link rel="stylesheet" href="styles.css" />
+  <meta name="theme-color" content="#0f172a" />
+  <meta name="description" content="PWA สำหรับประเมิน National Early Warning Score (NEWS) พร้อมบันทึกประวัติออฟไลน์" />
   <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <link rel="stylesheet" href="styles.css" />
+  <title>SUANDOK NEWS PWA</title>
 </head>
-
 <body>
+  <div class="app-shell">
+    <header class="hero">
+      <div>
+        <p class="eyebrow">PWA Offline-ready</p>
+        <h1>SUANDOK NEWS</h1>
+        <p class="subtitle">National Early Warning Score - สัญญาณเตือนภาวะวิกฤต</p>
+      </div>
+      <button id="installBtn" class="secondary-btn hidden" type="button">ติดตั้งแอป</button>
+    </header>
 
-<div class="app-shell">
+    <main>
+      <section class="card section-grid">
+        <div class="field-group span-2">
+          <label for="location">สถานที่ประเมิน</label>
+          <input id="location" type="text" placeholder="เช่น OPD / Ward / ER" />
+        </div>
+        <div class="field-group">
+          <label for="hn">เลขที่โรงพยาบาล (HN)</label>
+          <input id="hn" type="text" inputmode="numeric" placeholder="เช่น 123456" />
+        </div>
+        <div class="field-group">
+          <label for="assessmentTime">เวลาประเมิน</label>
+          <input id="assessmentTime" type="datetime-local" />
+        </div>
+      </section>
 
-  <header class="hero">
-    <h1>SUANDOK NEWS</h1>
-    <p>National Early Warning Score</p>
-  </header>
+      <section class="measure-list">
+        <article class="card">
+          <div class="item-header"><span class="badge">1</span><h2>อัตราการหายใจ (ครั้ง/นาที)</h2></div>
+          <select id="respiratoryRate"></select>
+        </article>
 
-  <!-- INFO -->
-  <div class="card">
-    <label>สถานที่ประเมิน</label>
-    <input id="location" type="text" />
+        <article class="card">
+          <div class="item-header"><span class="badge">2</span><h2>ความอิ่มตัวของออกซิเจนในเลือด</h2></div>
+          <div class="inline-field">
+            <label><input type="radio" name="spo2Scale" value="1" checked /> Scale 1</label>
+            <label><input type="radio" name="spo2Scale" value="2" /> Scale 2</label>
+          </div>
+          <select id="spo2"></select>
+        </article>
 
-    <label>HN</label>
-    <input id="hn" type="text" />
+        <article class="card">
+          <div class="item-header"><span class="badge">3</span><h2>การใช้ออกซิเจนเสริม</h2></div>
+          <select id="oxygenSupport"></select>
+        </article>
+
+        <article class="card">
+          <div class="item-header"><span class="badge">4</span><h2>อุณหภูมิ</h2></div>
+          <select id="temperature"></select>
+        </article>
+
+        <article class="card">
+          <div class="item-header"><span class="badge">5</span><h2>ความดันโลหิตซิสโตลิก (มม.ปรอท)</h2></div>
+          <select id="systolicBP"></select>
+        </article>
+
+        <article class="card">
+          <div class="item-header"><span class="badge">6</span><h2>อัตราการเต้นของหัวใจ (ครั้ง/นาที)</h2></div>
+          <select id="heartRate"></select>
+        </article>
+
+        <article class="card">
+          <div class="item-header"><span class="badge">7</span><h2>ระดับความรู้สึกตัว (AVPU)</h2></div>
+          <select id="consciousness"></select>
+        </article>
+      </section>
+
+      <section class="card result-card">
+        <div class="result-grid">
+          <div>
+            <p class="result-label">คะแนนรวม</p>
+            <p id="totalScore" class="result-value">0</p>
+          </div>
+          <div>
+            <p class="result-label">ระดับความเร่งด่วน</p>
+            <p id="urgencyLabel" class="urgency-pill low">Non Urgent</p>
+          </div>
+          <div>
+            <p class="result-label">RED score</p>
+            <p id="redFlag" class="red-flag no">ไม่พบ</p>
+          </div>
+        </div>
+        <div class="action-row">
+          <button id="saveBtn" class="primary-btn" type="button">บันทึกคะแนน</button>
+          <button id="resetBtn" class="secondary-btn" type="button">รีเซ็ต</button>
+        </div>
+        <p id="saveStatus" class="save-status" aria-live="polite"></p>
+      </section>
+
+      <section class="card">
+        <h2>คำแนะนำการพยาบาล</h2>
+        <div id="adviceBox" class="advice-box"></div>
+      </section>
+
+      <section class="card">
+        <div class="history-header">
+          <h2>ประวัติการบันทึก</h2>
+          <button id="clearHistoryBtn" class="text-btn" type="button">ล้างประวัติ</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>สถานที่</th>
+                <th>HN</th>
+                <th>คะแนน</th>
+                <th>ระดับ</th>
+                <th>เวลา</th>
+              </tr>
+            </thead>
+            <tbody id="historyTable"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
   </div>
 
-  <!-- 1 -->
-  <div class="card">
-    <label>Respiratory Rate</label>
-    <select id="respiratoryRate">
-      <option value="">-- เลือก --</option>
-      <option value="3">≤8 (3)</option>
-      <option value="1">9–11 (1)</option>
-      <option value="0">12–20 (0)</option>
-      <option value="2">21–24 (2)</option>
-      <option value="3">≥25 (3)</option>
-    </select>
-  </div>
-
-  <!-- 2 -->
-  <div class="card">
-    <label>SpO₂</label>
-    <select id="spo2">
-      <option value="">-- เลือก --</option>
-      <option value="3">≤91 (3)</option>
-      <option value="2">92–93 (2)</option>
-      <option value="1">94–95 (1)</option>
-      <option value="0">≥96 (0)</option>
-    </select>
-  </div>
-
-  <!-- 3 -->
-  <div class="card">
-    <label>Temperature</label>
-    <select id="temperature">
-      <option value="">-- เลือก --</option>
-      <option value="3">≤35 (3)</option>
-      <option value="1">35.1–36 (1)</option>
-      <option value="0">36.1–38 (0)</option>
-      <option value="1">38.1–39 (1)</option>
-      <option value="2">≥39.1 (2)</option>
-    </select>
-  </div>
-
-  <!-- 4 -->
-  <div class="card">
-    <label>Systolic BP</label>
-    <select id="systolicBP">
-      <option value="">-- เลือก --</option>
-      <option value="3">≤90 (3)</option>
-      <option value="2">91–100 (2)</option>
-      <option value="1">101–110 (1)</option>
-      <option value="0">111–219 (0)</option>
-      <option value="3">≥220 (3)</option>
-    </select>
-  </div>
-
-  <!-- 5 -->
-  <div class="card">
-    <label>Heart Rate</label>
-    <select id="heartRate">
-      <option value="">-- เลือก --</option>
-      <option value="3">≤40 (3)</option>
-      <option value="1">41–50 (1)</option>
-      <option value="0">51–90 (0)</option>
-      <option value="1">91–110 (1)</option>
-      <option value="2">111–130 (2)</option>
-      <option value="3">≥131 (3)</option>
-    </select>
-  </div>
-
-  <!-- 6 -->
-  <div class="card">
-    <label>Consciousness (AVPU)</label>
-    <select id="consciousness">
-      <option value="">-- เลือก --</option>
-      <option value="0">A (0)</option>
-      <option value="3">V/P/U (3)</option>
-    </select>
-  </div>
-
-  <!-- RESULT -->
-  <div class="card">
-    <h2>คะแนนรวม</h2>
-    <div id="totalScore">0</div>
-
-    <h3 id="urgencyLabel">Normal</h3>
-    <h3 id="redFlag">ปกติ</h3>
-
-    <button id="saveBtn">บันทึกคะแนน</button>
-    <button id="resetBtn">รีเซ็ต</button>
-  </div>
-
-</div>
-
-<script src="app.js"></script>
-
+  <script src="app.js"></script>
 </body>
 </html>
