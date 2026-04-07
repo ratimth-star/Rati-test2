@@ -1,11 +1,11 @@
 {
-  "name": "SUANDOK NEWS PWA",
+  "name": "SUANDOK NEWS Responsive PWA",
   "short_name": "NEWS PWA",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#081120",
   "theme_color": "#0f172a",
-  "description": "เว็บ PWA สำหรับประเมิน NEWS พร้อมใช้งานออฟไลน์",
+  "description": "เว็บ PWA สำหรับประเมิน NEWS รองรับการใช้งานทั้ง notebook และ phone",
   "icons": [
     {
       "src": "icons/icon-192.png",

@@ -2,175 +2,282 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#0f172a" />
-  <meta name="description" content="PWA สำหรับประเมิน National Early Warning Score (NEWS) พร้อมบันทึกประวัติออฟไลน์" />
+  <meta name="description" content="PWA สำหรับประเมิน National Early Warning Score (NEWS) พร้อมบันทึกประวัติออฟไลน์ และรองรับมือถือ" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>SUANDOK NEWS PWA</title>
+
   <link rel="manifest" href="manifest.json" />
   <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
   <link rel="stylesheet" href="styles.css" />
-  <title>SUANDOK NEWS PWA</title>
 </head>
 <body>
-  <div class="app-shell">
-    <header class="hero">
-      <div>
-        <p class="eyebrow">PWA Offline-ready</p>
-        <h1>SUANDOK NEWS</h1>
-        <p class="subtitle">National Early Warning Score - สัญญาณเตือนภาวะวิกฤต</p>
+  <div class="page-gradient min-vh-100">
+    <div class="container-fluid container-xxl py-3 py-md-4">
+      <header class="card border-0 shadow-lg overflow-hidden hero-card mb-3 mb-md-4">
+        <div class="card-body p-3 p-md-4">
+          <div class="row g-3 align-items-center">
+            <div class="col-lg-8">
+              <div class="d-flex flex-column gap-2">
+                <span class="hero-badge">PWA • Offline Ready • Responsive</span>
+                <div>
+                  <h1 class="display-6 fw-bold mb-1 text-white">SUANDOK NEWS</h1>
+                  <p class="mb-0 text-secondary-light">National Early Warning Score สำหรับประเมินความเสี่ยงผู้ป่วย รองรับการใช้งานบน notebook และ phone</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="d-grid d-sm-flex justify-content-lg-end gap-2">
+                <button id="installBtn" class="btn btn-outline-light d-none" type="button">ติดตั้งแอป</button>
+                <button id="resetBtnTop" class="btn btn-soft" type="button">รีเซ็ตทั้งหมด</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="row g-3 g-lg-4 align-items-start">
+        <div class="col-12 col-xl-8">
+          <section class="card app-card border-0 shadow-sm mb-3">
+            <div class="card-body p-3 p-md-4">
+              <div class="d-flex flex-column flex-md-row justify-content-between gap-2 mb-3">
+                <div>
+                  <h2 class="h4 mb-1 text-white">ข้อมูลการประเมิน</h2>
+                  <p class="text-muted-custom mb-0">กรอกข้อมูลพื้นฐานก่อนบันทึกคะแนน</p>
+                </div>
+              </div>
+
+              <div class="row g-3">
+                <div class="col-12 col-md-6">
+                  <label for="location" class="form-label">สถานที่ประเมิน</label>
+                  <input id="location" class="form-control form-control-lg custom-control" type="text" placeholder="เช่น OPD / Ward / ER" />
+                </div>
+                <div class="col-12 col-md-6">
+                  <label for="hn" class="form-label">เลขที่โรงพยาบาล (HN)</label>
+                  <input id="hn" class="form-control form-control-lg custom-control" type="text" inputmode="numeric" placeholder="เช่น 123456" />
+                </div>
+                <div class="col-12 col-md-6">
+                  <label for="assessmentTime" class="form-label">เวลาประเมิน</label>
+                  <input id="assessmentTime" class="form-control form-control-lg custom-control" type="datetime-local" />
+                </div>
+                <div class="col-12 col-md-6">
+                  <label for="nurseNote" class="form-label">หมายเหตุเพิ่มเติม</label>
+                  <input id="nurseNote" class="form-control form-control-lg custom-control" type="text" placeholder="บันทึกเพิ่มเติม (ถ้ามี)" />
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="card app-card border-0 shadow-sm mb-3">
+            <div class="card-body p-3 p-md-4">
+              <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+                <div>
+                  <h2 class="h4 mb-1 text-white">ตัวชี้วัด NEWS</h2>
+                  <p class="text-muted-custom mb-0">เลือกค่าที่ตรงกับการประเมินผู้ป่วย</p>
+                </div>
+                <span class="small text-muted-custom">ระบบจะคำนวณคะแนนให้อัตโนมัติ</span>
+              </div>
+
+              <div class="row g-3" id="measureGrid">
+                <div class="col-12 col-md-6">
+                  <article class="metric-card h-100">
+                    <div class="metric-header">
+                      <span class="metric-number">1</span>
+                      <h3>อัตราการหายใจ (ครั้ง/นาที)</h3>
+                    </div>
+                    <select id="respiratoryRate" class="form-select custom-control score-input">
+                      <option value="">-- เลือก --</option>
+                      <option value="3">≤8 (3)</option>
+                      <option value="1">9–11 (1)</option>
+                      <option value="0">12–20 (0)</option>
+                      <option value="2">21–24 (2)</option>
+                      <option value="3">≥25 (3)</option>
+                    </select>
+                  </article>
+                </div>
+
+                <div class="col-12 col-md-6">
+                  <article class="metric-card h-100">
+                    <div class="metric-header">
+                      <span class="metric-number">2</span>
+                      <h3>SpO₂</h3>
+                    </div>
+                    <div class="btn-group scale-group w-100 mb-2" role="group" aria-label="SpO2 Scale">
+                      <input type="radio" class="btn-check spo2-scale" name="spo2Scale" id="scale1" value="1" checked>
+                      <label class="btn btn-outline-light" for="scale1">Scale 1</label>
+
+                      <input type="radio" class="btn-check spo2-scale" name="spo2Scale" id="scale2" value="2">
+                      <label class="btn btn-outline-light" for="scale2">Scale 2</label>
+                    </div>
+                    <select id="spo2" class="form-select custom-control score-input"></select>
+                    <div class="form-text text-muted-custom">Scale 2 เหมาะกับผู้ป่วยที่มีภาวะ hypercapnic respiratory failure</div>
+                  </article>
+                </div>
+
+                <div class="col-12 col-md-6">
+                  <article class="metric-card h-100">
+                    <div class="metric-header">
+                      <span class="metric-number">3</span>
+                      <h3>การใช้ออกซิเจนเสริม</h3>
+                    </div>
+                    <select id="oxygenSupport" class="form-select custom-control score-input">
+                      <option value="">-- เลือก --</option>
+                      <option value="0">ไม่ใช้ (0)</option>
+                      <option value="2">ใช้ออกซิเจนเสริม (2)</option>
+                    </select>
+                  </article>
+                </div>
+
+                <div class="col-12 col-md-6">
+                  <article class="metric-card h-100">
+                    <div class="metric-header">
+                      <span class="metric-number">4</span>
+                      <h3>อุณหภูมิ</h3>
+                    </div>
+                    <select id="temperature" class="form-select custom-control score-input">
+                      <option value="">-- เลือก --</option>
+                      <option value="3">≤35.0 (3)</option>
+                      <option value="1">35.1–36.0 (1)</option>
+                      <option value="0">36.1–38.0 (0)</option>
+                      <option value="1">38.1–39.0 (1)</option>
+                      <option value="2">≥39.1 (2)</option>
+                    </select>
+                  </article>
+                </div>
+
+                <div class="col-12 col-md-6">
+                  <article class="metric-card h-100">
+                    <div class="metric-header">
+                      <span class="metric-number">5</span>
+                      <h3>ความดันโลหิตซิสโตลิก (มม.ปรอท)</h3>
+                    </div>
+                    <select id="systolicBP" class="form-select custom-control score-input">
+                      <option value="">-- เลือก --</option>
+                      <option value="3">≤90 (3)</option>
+                      <option value="2">91–100 (2)</option>
+                      <option value="1">101–110 (1)</option>
+                      <option value="0">111–219 (0)</option>
+                      <option value="3">≥220 (3)</option>
+                    </select>
+                  </article>
+                </div>
+
+                <div class="col-12 col-md-6">
+                  <article class="metric-card h-100">
+                    <div class="metric-header">
+                      <span class="metric-number">6</span>
+                      <h3>อัตราการเต้นของหัวใจ (ครั้ง/นาที)</h3>
+                    </div>
+                    <select id="heartRate" class="form-select custom-control score-input">
+                      <option value="">-- เลือก --</option>
+                      <option value="3">≤40 (3)</option>
+                      <option value="1">41–50 (1)</option>
+                      <option value="0">51–90 (0)</option>
+                      <option value="1">91–110 (1)</option>
+                      <option value="2">111–130 (2)</option>
+                      <option value="3">≥131 (3)</option>
+                    </select>
+                  </article>
+                </div>
+
+                <div class="col-12 col-md-6">
+                  <article class="metric-card h-100">
+                    <div class="metric-header">
+                      <span class="metric-number">7</span>
+                      <h3>ระดับความรู้สึกตัว (AVPU)</h3>
+                    </div>
+                    <select id="consciousness" class="form-select custom-control score-input">
+                      <option value="">-- เลือก --</option>
+                      <option value="0">A - Alert (0)</option>
+                      <option value="3">V / P / U (3)</option>
+                    </select>
+                  </article>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="card app-card border-0 shadow-sm mb-3">
+            <div class="card-body p-3 p-md-4">
+              <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+                <div>
+                  <h2 class="h4 mb-1 text-white">ประวัติการบันทึก</h2>
+                  <p class="text-muted-custom mb-0">เก็บไว้ในเครื่อง และสามารถส่งต่อไป Google Sheet ได้</p>
+                </div>
+                <button id="clearHistoryBtn" class="btn btn-outline-danger btn-sm" type="button">ล้างประวัติ</button>
+              </div>
+
+              <div class="table-responsive history-table-wrap">
+                <table class="table table-dark align-middle mb-0 custom-table">
+                  <thead>
+                    <tr>
+                      <th>สถานที่</th>
+                      <th>HN</th>
+                      <th>คะแนน</th>
+                      <th>ระดับ</th>
+                      <th>เวลา</th>
+                    </tr>
+                  </thead>
+                  <tbody id="historyTable"></tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <div class="col-12 col-xl-4">
+          <div class="sticky-xl-top sticky-panel">
+            <section class="card result-panel border-0 shadow-lg mb-3">
+              <div class="card-body p-3 p-md-4">
+                <div class="d-flex justify-content-between align-items-start gap-2 mb-3">
+                  <div>
+                    <h2 class="h4 mb-1 text-white">ผลการประเมิน</h2>
+                    <p class="text-muted-custom mb-0">อัปเดตแบบเรียลไทม์</p>
+                  </div>
+                  <span id="scoreStateTag" class="badge rounded-pill text-bg-secondary px-3 py-2">พร้อมประเมิน</span>
+                </div>
+
+                <div class="result-score-card mb-3">
+                  <div class="small text-uppercase text-muted-custom mb-1">คะแนนรวม</div>
+                  <div id="totalScore" class="result-score">0</div>
+                </div>
+
+                <div class="d-grid gap-3 mb-3">
+                  <div>
+                    <div class="small text-uppercase text-muted-custom mb-2">ระดับความเร่งด่วน</div>
+                    <div id="urgencyLabel" class="status-pill low">Normal</div>
+                  </div>
+                  <div>
+                    <div class="small text-uppercase text-muted-custom mb-2">RED Flag</div>
+                    <div id="redFlag" class="status-pill neutral">ไม่พบ</div>
+                  </div>
+                </div>
+
+                <div class="d-grid gap-2 d-sm-flex mb-3">
+                  <button id="saveBtn" class="btn btn-success btn-lg flex-fill" type="button">บันทึกคะแนน</button>
+                  <button id="resetBtn" class="btn btn-outline-light btn-lg flex-fill" type="button">รีเซ็ต</button>
+                </div>
+
+                <p id="saveStatus" class="save-status mb-0" aria-live="polite"></p>
+              </div>
+            </section>
+
+            <section class="card app-card border-0 shadow-sm">
+              <div class="card-body p-3 p-md-4">
+                <h2 class="h4 mb-3 text-white">คำแนะนำการพยาบาล</h2>
+                <div id="adviceBox" class="advice-box"></div>
+              </div>
+            </section>
+          </div>
+        </div>
       </div>
-      <button id="installBtn" class="secondary-btn hidden" type="button">ติดตั้งแอป</button>
-    </header>
-
-    <main>
-      <section class="card section-grid">
-        <div class="field-group span-2">
-          <label for="location">สถานที่ประเมิน</label>
-          <input id="location" type="text" placeholder="เช่น OPD / Ward / ER" />
-        </div>
-        <div class="field-group">
-          <label for="hn">เลขที่โรงพยาบาล (HN)</label>
-          <input id="hn" type="text" inputmode="numeric" placeholder="เช่น 123456" />
-        </div>
-        <div class="field-group">
-          <label for="assessmentTime">เวลาประเมิน</label>
-          <input id="assessmentTime" type="datetime-local" />
-        </div>
-      </section>
-
-      <section class="measure-list">
-        <article class="card">
-          <div class="item-header"><span class="badge">1</span><h2>อัตราการหายใจ (ครั้ง/นาที)</h2></div>
-          <select id="respiratoryRate">
-            <option value="">-- เลือก --</option>
-            <option value="3">≤8 (3)</option>
-            <option value="1">9–11 (1)</option>
-            <option value="0">12–20 (0)</option>
-            <option value="2">21–24 (2)</option>
-            <option value="3">≥25 (3)</option>
-          </select>
-        </article>
-
-        <article class="card">
-          <div class="item-header"><span class="badge">2</span><h2>ความอิ่มตัวของออกซิเจนในเลือด</h2></div>
-          <div class="inline-field">
-            <label><input type="radio" name="spo2Scale" value="1" checked /> Scale 1</label>
-            <label><input type="radio" name="spo2Scale" value="2" /> Scale 2</label>
-          </div>
-          <select id="spo2">
-            <option value="">-- เลือก --</option>
-            <option value="3">≤91 (3)</option>
-            <option value="2">92–93 (2)</option>
-            <option value="1">94–95 (1)</option>
-            <option value="0">≥96 (0)</option>
-          </select>
-        </article>
-
-        <article class="card">
-          <div class="item-header"><span class="badge">3</span><h2>การใช้ออกซิเจนเสริม</h2></div>
-          <select id="oxygenSupport">
-            <option value="">-- เลือก --</option>
-            <option value="0">ไม่ใช้ (0)</option>
-            <option value="2">ใช้ออกซิเจนเสริม (2)</option>
-          </select>
-        </article>
-
-        <article class="card">
-          <div class="item-header"><span class="badge">4</span><h2>อุณหภูมิ</h2></div>
-          <select id="temperature">
-            <option value="">-- เลือก --</option>
-            <option value="3">≤35.0 (3)</option>
-            <option value="1">35.1–36.0 (1)</option>
-            <option value="0">36.1–38.0 (0)</option>
-            <option value="1">38.1–39.0 (1)</option>
-            <option value="2">≥39.1 (2)</option>
-          </select>
-        </article>
-
-        <article class="card">
-          <div class="item-header"><span class="badge">5</span><h2>ความดันโลหิตซิสโตลิก (มม.ปรอท)</h2></div>
-          <select id="systolicBP">
-            <option value="">-- เลือก --</option>
-            <option value="3">≤90 (3)</option>
-            <option value="2">91–100 (2)</option>
-            <option value="1">101–110 (1)</option>
-            <option value="0">111–219 (0)</option>
-            <option value="3">≥220 (3)</option>
-          </select>
-        </article>
-
-        <article class="card">
-          <div class="item-header"><span class="badge">6</span><h2>อัตราการเต้นของหัวใจ (ครั้ง/นาที)</h2></div>
-          <select id="heartRate">
-            <option value="">-- เลือก --</option>
-            <option value="3">≤40 (3)</option>
-            <option value="1">41–50 (1)</option>
-            <option value="0">51–90 (0)</option>
-            <option value="1">91–110 (1)</option>
-            <option value="2">111–130 (2)</option>
-            <option value="3">≥131 (3)</option>
-          </select>
-        </article>
-
-        <article class="card">
-          <div class="item-header"><span class="badge">7</span><h2>ระดับความรู้สึกตัว (AVPU)</h2></div>
-          <select id="consciousness">
-            <option value="">-- เลือก --</option>
-            <option value="0">A - Alert (0)</option>
-            <option value="3">V/P/U (3)</option>
-          </select>
-        </article>
-      </section>
-
-      <section class="card result-card">
-        <div class="result-grid">
-          <div>
-            <p class="result-label">คะแนนรวม</p>
-            <p id="totalScore" class="result-value">0</p>
-          </div>
-          <div>
-            <p class="result-label">ระดับความเร่งด่วน</p>
-            <p id="urgencyLabel" class="urgency-pill low">Non Urgent</p>
-          </div>
-          <div>
-            <p class="result-label">RED score</p>
-            <p id="redFlag" class="red-flag no">ไม่พบ</p>
-          </div>
-        </div>
-        <div class="action-row">
-          <button id="saveBtn" class="primary-btn" type="button">บันทึกคะแนน</button>
-          <button id="resetBtn" class="secondary-btn" type="button">รีเซ็ต</button>
-        </div>
-        <p id="saveStatus" class="save-status" aria-live="polite"></p>
-      </section>
-
-      <section class="card">
-        <h2>คำแนะนำการพยาบาล</h2>
-        <div id="adviceBox" class="advice-box"></div>
-      </section>
-
-      <section class="card">
-        <div class="history-header">
-          <h2>ประวัติการบันทึก</h2>
-          <button id="clearHistoryBtn" class="text-btn" type="button">ล้างประวัติ</button>
-        </div>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>สถานที่</th>
-                <th>HN</th>
-                <th>คะแนน</th>
-                <th>ระดับ</th>
-                <th>เวลา</th>
-              </tr>
-            </thead>
-            <tbody id="historyTable"></tbody>
-          </table>
-        </div>
-      </section>
-    </main>
+    </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
   <script src="app.js"></script>
 </body>
 </html>
